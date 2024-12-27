@@ -1,5 +1,6 @@
 package com.oguzhantimur4444.todo_api.controller;
 
+import com.oguzhantimur4444.todo_api.model.LoginRequest;
 import com.oguzhantimur4444.todo_api.service.AuthenticationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String username, @RequestParam String password) {
-        return authenticationService.register(username, password);
+    public String register(@RequestBody LoginRequest request) {
+        return authenticationService.register(request.getUsername(), request.getPassword());
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password) {
-        return authenticationService.login(username, password);
+    public String login(@RequestBody LoginRequest request) {
+        return authenticationService.login(request.getUsername(), request.getPassword());
     }
 }
