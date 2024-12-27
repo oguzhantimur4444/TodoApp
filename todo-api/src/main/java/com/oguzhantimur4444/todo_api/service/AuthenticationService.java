@@ -35,8 +35,7 @@ public class AuthenticationService {
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Not Found User"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password,user.getPassword())) {
             throw new RuntimeException("Wrong Password");
         }
 
