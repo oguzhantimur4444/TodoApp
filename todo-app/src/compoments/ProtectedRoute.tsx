@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { isTokenExpired, logout } from "../Auth";
 
 type ProtectedRouteProps = {
   children: React.ReactNode; // children için doğru tipi belirtin
@@ -7,7 +8,17 @@ type ProtectedRouteProps = {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const user = localStorage.getItem("user");
 
-  return user ? <>{children}</> : <Navigate to="/login" />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  const token = JSON.parse(user);
+
+  if (isTokenExpired(token)) {
+    logout();
+    alert('Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.');
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

@@ -1,5 +1,6 @@
 package com.oguzhantimur4444.todo_api.controller;
 
+import com.oguzhantimur4444.todo_api.model.CheckUsernameRequest;
 import com.oguzhantimur4444.todo_api.model.LoginRequest;
 import com.oguzhantimur4444.todo_api.service.AuthenticationService;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,11 @@ public class AuthController {
 
     public AuthController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+
+    @PostMapping("/checkUsername")
+    public boolean userExists(@RequestBody CheckUsernameRequest request) {
+        return !authenticationService.isUsernameTaken(request.getUsername());
     }
 
     @PostMapping("/register")

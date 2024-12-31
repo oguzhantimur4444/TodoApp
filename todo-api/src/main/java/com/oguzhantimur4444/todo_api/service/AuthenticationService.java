@@ -19,6 +19,10 @@ public class AuthenticationService {
         this.jwtUtils = jwtUtils;
     }
 
+    public boolean isUsernameTaken(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
     public String register(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username is taken");
