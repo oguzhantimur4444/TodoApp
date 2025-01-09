@@ -15,7 +15,7 @@ export default function Login() {
             await login(username, password);
             navigate('/');
         } catch (err: any) {
-            setError('Login failed. Please check your credentials.');
+            setError('Kullanıcı adı veya şifre hatalı.');
         }
     };
     return (

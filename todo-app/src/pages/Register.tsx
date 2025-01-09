@@ -30,7 +30,7 @@ export default function Register() {
         }
         try {
             await register(username, password);
-            navigate('/');
+            navigate('/login');
         } catch (err: any) {
             setError('Login failed. Please check your credentials.');
         }

@@ -1,48 +1,44 @@
 package com.oguzhantimur4444.todo_api.service;
 
-import com.oguzhantimur4444.todo_api.compoment.JwtUtils;
+import com.oguzhantimur4444.todo_api.model.request.AuthenticationRequest;
 import com.oguzhantimur4444.todo_api.model.User;
+import com.oguzhantimur4444.todo_api.model.response.AuthenticationResponse;
 import com.oguzhantimur4444.todo_api.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
-
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+    public AuthenticationService(JwtService jwtService, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
     }
 
-    public boolean isUsernameTaken(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
-    public String register(String username, String password) {
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username is taken");
-        }
-
+    public AuthenticationResponse register(AuthenticationRequest request) {
         User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
-
-        return "Registration Success";
+        return new AuthenticationResponse(jwtService.generateJwtToken(user));
     }
 
-    public String login(String username, String password) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Not Found User"));
-        if (!passwordEncoder.matches(password,user.getPassword())) {
-            throw new RuntimeException("Wrong Password");
-        }
-
-        return jwtUtils.generateJwtToken(username);
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        return new AuthenticationResponse(jwtService.generateJwtToken(user));
     }
 }

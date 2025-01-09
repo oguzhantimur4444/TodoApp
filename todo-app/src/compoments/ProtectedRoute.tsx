@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { isTokenExpired, logout } from "../Auth";
 
 type ProtectedRouteProps = {
-  children: React.ReactNode; // children için doğru tipi belirtin
+  children: React.ReactNode;
 };
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
