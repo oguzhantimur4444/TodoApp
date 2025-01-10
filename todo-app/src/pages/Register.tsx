@@ -1,26 +1,14 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/authForm.css"
-import { register, CheckUsername } from "../Auth";
+import { register } from "../Auth";
 
 export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [hashPassword, setHasPassword] = useState('');
     const [error, setError] = useState('');
-    const [usernameError, setUsernameError] = useState('');
     const navigate = useNavigate();
-
-    const checkUsername = async (e:ChangeEvent<HTMLInputElement>)=>{
-        setUsername(e.target.value)
-        const isValid = await CheckUsername(e.target.value)
-        console.log(isValid)
-        if (!isValid) {
-            setUsernameError("Kullanıcı Adı Kullanılıyor")
-        }else{
-            setUsernameError('')
-        }
-    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,8 +31,7 @@ export default function Register() {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
-                        <input type="text" id="username" name="username" value={username} onChange={checkUsername} required />
-                        {usernameError && <p style={{ color: 'red' }}>{usernameError}</p>}
+                        <input type="text" id="username" name="username" value={username} required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>

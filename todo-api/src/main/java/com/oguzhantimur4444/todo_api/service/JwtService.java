@@ -40,7 +40,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setSubject(user.getUsername())
-                .setExpiration(new java.util.Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .setExpiration(new java.util.Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(jwtSecret)
                 .compact();
     }

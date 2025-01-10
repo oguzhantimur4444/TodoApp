@@ -12,8 +12,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
   const token = JSON.parse(user);
-
-  if (isTokenExpired(token)) {
+  console.log(token);
+  
+  if (isTokenExpired(token.token)) {
     logout();
     alert('Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.');
     return <Navigate to="/login" replace />;
